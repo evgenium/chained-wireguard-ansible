@@ -11,16 +11,12 @@
     command: uname -r
     register: kernel_release
 
-  - name: Add the WireGuard PPA
-    apt_repository:
-      repo: 'ppa:wireguard/wireguard'
-
   - name: Install WireGuard and other requirements 
     apt:
       name:
         - linux-headers-{{ kernel_release.stdout }}
         - linux-headers-generic
-        - wireguard-dkms
+        - wireguard
         - wireguard-tools
         - python2.7        
       state: present
@@ -83,9 +79,6 @@
 
   - name: Set up firewall rules
     include: firewall.yml
-
-  - name: Set up unbound for DNS
-    include: dns.yml
 
   - name: Reboot the server
     shell: sleep 2 && shutdown -r now
